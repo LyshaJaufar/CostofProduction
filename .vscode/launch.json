@@ -8,7 +8,12 @@
             "name": "Python: Module",
             "type": "python",
             "request": "launch",
-            "module": "python -m main pythonTest.csv"
+            "module": "python -m main pythonTest.csv",
+            "stopOnEntry": true,
+            "justMyCode": false,
+            "args": ["run",
+                "debug"
+            ]
         }
     ]
 }
