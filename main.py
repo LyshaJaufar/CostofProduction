@@ -6,20 +6,26 @@ import csv
 database = open(argv[1], "r")
 
 # Answer Sheet
-file = open('Answer Sheet.csv', 'w')
+file = open('CoP Answer Sheet.csv', 'w')
 if (file == None):
     exit(1)
 
 # Create DictReader
 reader = csv.DictReader(database)
 
-# Prompt for FC
+# Prompt for FC, VC and price
 fixedCost = int(input("Enter fixed cost: "))
 variableCost = int(input("Enter variable cost: "))
-price = int(input("Enter profit: "))
+price = int(input("Enter price: "))
 
+# Write the fieldnames/column names in row 0
+for i in range(len(reader.fieldnames)):
+    file.write(reader.fieldnames[i] + ',')
+file.write("\n")
 
+# Iterate over each row and input data
 for row in reader: 
+    # Variable for data of given row
     output = int(row['Magazine per month'].lower())
     FC = row['Total fixed costs'].lower()
     VC = row['Total Variable costs'].lower()
@@ -29,38 +35,49 @@ for row in reader:
     totalRevenue = row['Total Revenue'].lower()
     totalProfit = row['Total profit'].lower()
 
+    # Calculate fixed cost
     if FC == "":
         FC = fixedCost
         file.write("%i," % (FC))
 
+    # Calculate variable cost
     if VC == "":
         VC = variableCost * output
         file.write("%i," % (VC))
-
+        
+    # Calculate total cost
     if totalCost == "":
         totalCost = FC + VC
         file.write("%i," % (totalCost))
-
+        
+    # Calculate average cost
     if avgCost == "":
         avgCost = totalCost / output
         file.write("%i," % (avgCost))
-
+        
+    # Calculate marginal cost
     if marginalCost == "":
         marginalCost = (totalCost - previousTC)/(output - previousOutput)
         file.write("%i," % (marginalCost))
-
+        
+    # Calculate total revenue
     if totalRevenue == "":
         totalRevenue = price * output
         file.write("%i," % (totalRevenue))
-
+        
+    # Calculate total profit
     if totalProfit == "":
         totalRevenue = totalRevenue - totalCost
         file.write("%i" % (totalRevenue))   
 
+    # Values from previous iteration(output & total cost)
     previousOutput = output
     previousTC = totalCost
+
+    # Move to next line for next iteration
     file.write("\n")
 
+# Close files
 database.close()
 file.close()
 
