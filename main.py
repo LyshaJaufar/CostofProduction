@@ -1,40 +1,67 @@
 from sys import argv, exit
 import csv
 
-# Check for command-line args
-if len(argv) != 2:
-    print("Error")
-    exit(1)
 
 # Open the csv file
 database = open(argv[1], "r")
+
+# Answer Sheet
+file = open('Answer Sheet.csv', 'w')
+if (file == None):
+    exit(1)
 
 # Create DictReader
 reader = csv.DictReader(database)
 
 # Prompt for FC
 fixedCost = int(input("Enter fixed cost: "))
+variableCost = int(input("Enter variable cost: "))
+price = int(input("Enter profit: "))
 
-# Iterate over CSV file, printing each title
-for row in reader:
-    FC = row["Total fixed costs"]
-    
-    if FC in row:
-        database.append(fixedCost)
-        print(FC)
 
-# 1.Create a dictionary of the database (read contents into memory)
-#   Create list of the particular STRs
-STRs = []
+for row in reader: 
+    output = int(row['Magazine per month'].lower())
+    FC = row['Total fixed costs'].lower()
+    VC = row['Total Variable costs'].lower()
+    totalCost = row['Total costs'].lower()
+    avgCost = row['Average costs'].lower()
+    marginalCost = row['Marginal cost'].lower()
+    totalRevenue = row['Total Revenue'].lower()
+    totalProfit = row['Total profit'].lower()
 
-person = {}
-for name, data in enumerate(database):
-    if name == 0:
-        # Generate list of STR using for loop
-        STRs = [x for x in data.strip().split(",")][1:]  # output not included
-        FC = name["Total fixed costs"]
-        print(STRs)
-    else:
-        if FC in row:
-            database.append(fixedCost)
-            print(FC)
+    if FC == "":
+        FC = fixedCost
+        file.write("%i," % (FC))
+
+    if VC == "":
+        VC = variableCost * output
+        file.write("%i," % (VC))
+
+    if totalCost == "":
+        totalCost = FC + VC
+        file.write("%i," % (totalCost))
+
+    if avgCost == "":
+        avgCost = totalCost / output
+        file.write("%i," % (avgCost))
+
+    if marginalCost == "":
+        marginalCost = (totalCost - previousTC)/(output - previousOutput)
+        file.write("%i," % (marginalCost))
+
+    if totalRevenue == "":
+        totalRevenue = price * output
+        file.write("%i," % (totalRevenue))
+
+    if totalProfit == "":
+        totalRevenue = totalRevenue - totalCost
+        file.write("%i" % (totalRevenue))   
+
+    previousOutput = output
+    previousTC = totalCost
+    file.write("\n")
+
+database.close()
+file.close()
+
+
