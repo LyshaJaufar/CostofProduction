@@ -2,7 +2,7 @@ from sys import argv, exit
 import csv
 
 # Check for command-line args
-if len(argv) != 3:
+if len(argv) != 2:
     print("Error")
     exit(1)
 
