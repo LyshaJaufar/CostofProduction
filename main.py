@@ -1,3 +1,5 @@
+""" Calculate cost of production - Econ """
+
 from sys import argv, exit
 import csv
 
@@ -39,6 +41,9 @@ for row in reader:
     totalRevenue = row['Total Revenue'].lower()
     totalProfit = row['Total profit'].lower()
 
+    # Output
+    file.write((str(output) + ","))
+
     # Calculate fixed cost
     if FC == "":
         FC = fixedCost
@@ -58,11 +63,19 @@ for row in reader:
     if avgCost == "":
         avgCost = totalCost / output
         file.write("%i," % (avgCost))
-        
+
+    # Avg cost in the first row
+    if avgCost == "-":
+        file.write("-,")
+
     # Calculate marginal cost
     if marginalCost == "":
         marginalCost = (totalCost - previousTC)/(output - previousOutput)
         file.write("%i," % (marginalCost))
+
+    # Marginal cost in the first row
+    if marginalCost == "-":
+        file.write("-,")
         
     # Calculate total revenue
     if totalRevenue == "":
@@ -81,8 +94,7 @@ for row in reader:
     # Move to next line for next iteration
     file.write("\n")
 
+
 # Close files
 database.close()
 file.close()
-
-
