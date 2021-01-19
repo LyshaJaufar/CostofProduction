@@ -4,12 +4,12 @@ from sys import argv, exit
 import csv
 
 # Check for command-line args
-if len(argv) != 3:
+if len(argv) != 2:
     print("Error")
     exit(1)
 
 # Open the csv file
-database = open(argv[2], "r")
+database = open(argv[1], "r")
 
 # Answer Sheet
 file = open('CoP Answer Sheet.csv', 'w')
