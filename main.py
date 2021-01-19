@@ -4,12 +4,12 @@ from sys import argv, exit
 import csv
 
 # Check for command-line args
-if len(argv) != 2:
+if len(argv) != 3:
     print("Error")
     exit(1)
 
 # Open the csv file
-database = open(argv[1], "r")
+database = open(argv[2], "r")
 
 # Answer Sheet
 file = open('CoP Answer Sheet.csv', 'w')
@@ -41,6 +41,7 @@ for row in reader:
     totalRevenue = row['Total Revenue'].lower()
     totalProfit = row['Total profit'].lower()
 
+ 
     # Output
     file.write((str(output) + ","))
 
@@ -86,6 +87,7 @@ for row in reader:
     if totalProfit == "":
         totalRevenue = totalRevenue - totalCost
         file.write("%i" % (totalRevenue))   
+
 
     # Values from previous iteration(output & total cost)
     previousOutput = output
