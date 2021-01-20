@@ -1,5 +1,4 @@
 """ Calculate cost of production - Econ """
-
 from sys import argv, exit
 import csv
 
