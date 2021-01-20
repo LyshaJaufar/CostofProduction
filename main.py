@@ -10,28 +10,27 @@ if len(argv) != 2:
 
 # Open the csv file
 database = open(argv[1], "r")
+if (database == None):
+    exit(2)
 
 # Answer Sheet
-file = open('CoP Answer Sheet.csv', 'w')
+file = open('CoP Answer Sheet.csv', 'w', newline="")
 if (file == None):
-    exit(1)
+    exit(3)
 
-# Create DictReader
-reader = csv.DictReader(database)
+csvReader = csv.DictReader(database)
+fieldnames = ['Magazine per month','Total fixed costs','Total Variable costs','Total costs','Average costs','Marginal cost','Total Revenue','Total profit']
+csvWriter = csv.DictWriter(file, fieldnames=fieldnames)
+
+csvWriter.writeheader()
 
 # Prompt for FC, VC and price
 fixedCost = int(input("Enter fixed cost: "))
 variableCost = int(input("Enter variable cost: "))
 price = int(input("Enter price: "))
 
-# Write the fieldnames/column names in row 0
-for i in range(len(reader.fieldnames)):
-    file.write(reader.fieldnames[i] + ',')
-file.write("\n")
-
-# Iterate over each row and input data
-for row in reader: 
-    # Variable for data of given row
+for row in csvReader:
+    # Variable for each field
     output = int(row['Magazine per month'].lower())
     FC = row['Total fixed costs'].lower()
     VC = row['Total Variable costs'].lower()
@@ -41,62 +40,49 @@ for row in reader:
     totalRevenue = row['Total Revenue'].lower()
     totalProfit = row['Total profit'].lower()
 
- 
-    # Output
-    file.write((str(output) + ","))
-
     # Calculate fixed cost
     if FC == "":
-        FC = fixedCost
-        file.write("%i," % (FC))
+        row['Total fixed costs'] = fixedCost
 
     # Calculate variable cost
     if VC == "":
         VC = variableCost * output
-        file.write("%i," % (VC))
-        
+        row['Total Variable costs'] = VC
+
     # Calculate total cost
     if totalCost == "":
-        totalCost = FC + VC
-        file.write("%i," % (totalCost))
+        totalCost = fixedCost + VC
+        row['Total costs'] = totalCost
         
     # Calculate average cost
     if avgCost == "":
-        avgCost = totalCost / output
-        file.write("%i," % (avgCost))
-
-    # Avg cost in the first row
-    if avgCost == "-":
-        file.write("-,")
+        avgCost = totalCost // output
+        row['Average costs'] = avgCost
 
     # Calculate marginal cost
     if marginalCost == "":
         marginalCost = (totalCost - previousTC)/(output - previousOutput)
-        file.write("%i," % (marginalCost))
-
-    # Marginal cost in the first row
-    if marginalCost == "-":
-        file.write("-,")
+        row['Marginal cost'] = marginalCost
         
     # Calculate total revenue
     if totalRevenue == "":
         totalRevenue = price * output
-        file.write("%i," % (totalRevenue))
-        
+        row['Total Revenue'] = totalRevenue
+       
     # Calculate total profit
     if totalProfit == "":
-        totalRevenue = totalRevenue - totalCost
-        file.write("%i" % (totalRevenue))   
-
+        totalProfit = totalRevenue - totalCost
+        row['Total profit'] = totalProfit
 
     # Values from previous iteration(output & total cost)
     previousOutput = output
     previousTC = totalCost
 
-    # Move to next line for next iteration
-    file.write("\n")
 
+    csvWriter.writerow(row)
 
 # Close files
 database.close()
 file.close()
+
+
